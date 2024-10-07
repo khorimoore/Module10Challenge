@@ -21,7 +21,7 @@ const mainMenu = async () => {
       console.table(roles);
       break;
     case 'View All Employees':
-      const employees = await db.getAllEmployees();
+      const employees = await db.getAllEmployees();  
       console.table(employees);
       break;
     case 'Add Department':
