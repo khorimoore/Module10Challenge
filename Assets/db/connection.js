@@ -6,6 +6,6 @@ const pool = new Pool({
   database: 'employee_tracker',
   password: 'your_password',
   port: 5432,
-});
+}); 
 
 module.exports = pool;
