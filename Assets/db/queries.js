@@ -1,65 +1,77 @@
-const inquirer = require('inquirer');
-const db = require('./db/queries');
+import pool from './connection'; // Import the database connection
 
-const mainMenu = async () => {
-  const { action } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'action',
-      message: 'What would you like to do?',
-      choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add Department', 'Add Role', 'Add Employee', 'Exit'],
-    },
-  ]);
-
-  switch (action) {
-    case 'View All Departments':
-      const departments = await db.getAllDepartments();
-      console.table(departments);
-      break;
-    case 'View All Roles':
-      const roles = await db.getAllRoles();
-      console.table(roles);
-      break;
-    case 'View All Employees':
-      const employees = await db.getAllEmployees();
-      console.table(employees);
-      break;
-    case 'Add Department':
-      const { departmentName } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'departmentName',
-          message: 'Enter the name of the new department:',
-        },
-      ]);
-      await db.addDepartment(departmentName);
-      console.log('Department added successfully!');
-      break;
-    case 'Add Role':
-      const { roleTitle, roleSalary, roleDepartment } = await inquirer.prompt([
-        { type: 'input', name: 'roleTitle', message: 'Enter the title of the new role:' },
-        { type: 'input', name: 'roleSalary', message: 'Enter the salary for the new role:' },
-        { type: 'input', name: 'roleDepartment', message: 'Enter the department ID for the new role:' },
-      ]);
-      await db.addRole(roleTitle, roleSalary, roleDepartment);
-      console.log('Role added successfully!');
-      break;
-    case 'Add Employee':
-      const { firstName, lastName, roleId, managerId } = await inquirer.prompt([
-        { type: 'input', name: 'firstName', message: 'Enter the employee\'s first name:' },
-        { type: 'input', name: 'lastName', message: 'Enter the employee\'s last name:' },
-        { type: 'input', name: 'roleId', message: 'Enter the role ID for the employee:' },
-        { type: 'input', name: 'managerId', message: 'Enter the manager ID for the employee (if any):' },
-      ]);
-      await db.addEmployee(firstName, lastName, roleId, managerId);
-      console.log('Employee added successfully!');
-      break;
-    case 'Exit':
-      console.log('Goodbye!');
-      process.exit();
+// Function to get all departments
+async function getAllDepartments() {
+  try {
+    const result = await pool.query('SELECT * FROM departments');
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching departments:', error);
   }
+}
 
-  mainMenu();
+// Function to get all roles
+async function getAllRoles() {
+  try {
+    const result = await pool.query('SELECT * FROM roles');
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching roles:', error);
+  }
+}
+
+// Function to get all employees
+async function getAllEmployees() {
+  try {
+    const result = await pool.query('SELECT * FROM employees');
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+  }
+}
+
+// Function to add a new department
+async function addDepartment(departmentName) {
+  try {
+    const result = await pool.query('INSERT INTO departments (name) VALUES ($1) RETURNING *', [departmentName]);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error adding department:', error);
+  }
+}
+
+// Function to add a new role
+async function addRole(roleTitle, roleSalary, roleDepartment) {
+  try {
+    const result = await pool.query(
+      'INSERT INTO roles (title, salary, department_id) VALUES ($1, $2, $3) RETURNING *',
+      [roleTitle, roleSalary, roleDepartment]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error adding role:', error);
+  }
+}
+
+// Function to add a new employee
+async function addEmployee(firstName, lastName, roleId, managerId) {
+  try {
+    const result = await pool.query(
+      'INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [firstName, lastName, roleId, managerId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error adding employee:', error);
+  }
+}
+
+// Export all functions to be used in other modules
+module.exports = {
+  getAllDepartments,
+  getAllRoles,
+  getAllEmployees,
+  addDepartment,
+  addRole,
+  addEmployee,
 };
-
-mainMenu();

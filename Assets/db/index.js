@@ -1,9 +1,9 @@
-const inquirer = require('inquirer');
-const db = require('./db/queries');
+import  inquirer from 'inquirer';
+import db from './queries.js'; 
 
 const mainMenu = async () => {
   const { action } = await inquirer.prompt([
-    {
+    { 
       type: 'list',
       name: 'action',
       message: 'What would you like to do?',
