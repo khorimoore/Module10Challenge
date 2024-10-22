@@ -1,6 +1,5 @@
-import pool from './connection'; // Import the database connection
+import pool from './connection'; 
 
-// Function to get all departments
 async function getAllDepartments() {
   try {
     const result = await pool.query('SELECT * FROM departments');
@@ -10,7 +9,6 @@ async function getAllDepartments() {
   }
 }
 
-// Function to get all roles
 async function getAllRoles() {
   try {
     const result = await pool.query('SELECT * FROM roles');
@@ -20,7 +18,7 @@ async function getAllRoles() {
   }
 }
 
-// Function to get all employees
+
 async function getAllEmployees() {
   try {
     const result = await pool.query('SELECT * FROM employees');
@@ -30,7 +28,6 @@ async function getAllEmployees() {
   }
 }
 
-// Function to add a new department
 async function addDepartment(departmentName) {
   try {
     const result = await pool.query('INSERT INTO departments (name) VALUES ($1) RETURNING *', [departmentName]);
@@ -40,7 +37,6 @@ async function addDepartment(departmentName) {
   }
 }
 
-// Function to add a new role
 async function addRole(roleTitle, roleSalary, roleDepartment) {
   try {
     const result = await pool.query(
@@ -53,7 +49,7 @@ async function addRole(roleTitle, roleSalary, roleDepartment) {
   }
 }
 
-// Function to add a new employee
+
 async function addEmployee(firstName, lastName, roleId, managerId) {
   try {
     const result = await pool.query(
@@ -65,8 +61,6 @@ async function addEmployee(firstName, lastName, roleId, managerId) {
     console.error('Error adding employee:', error);
   }
 }
-
-// Export all functions to be used in other modules
 module.exports = {
   getAllDepartments,
   getAllRoles,
