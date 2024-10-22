@@ -74,4 +74,4 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 If you have any questions about the project, feel free to contact me via GitHub.
 
-- GitHub: [Your GitHub Username](https://github.com/khorimoore)
+- GitHub: (https://github.com/khorimoore)
